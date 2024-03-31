@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Websocket</title>
+  </head>
+  <body>
+    <h1>Welcome Websocket</h1>
+    <h3 id="myh"></h3>
+    <script>
+      let ws = new WebSocket("ws://127.0.0.1:8000/sc/");
+      ws.onopen = (event) => {
+        ws.send("Hi message from client");
+      };
+      ws.onmessage = (event) => {
+        // console.log(event.data);
+        document.getElementById("myh").innerText = JSON.parse(event.data).cnt;
+      };
+      ws.onclose = (event) => {};
+    </script>
+  </body>
+</html>

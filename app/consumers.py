@@ -2,8 +2,10 @@ from channels.consumer import SyncConsumer,AsyncConsumer
 from channels.exceptions import StopConsumer
 from time import sleep
 import asyncio
+import json
 
 class MySyncConsumer(SyncConsumer):
+    # websocket.connect message is handled by websocket_connect 
     def websocket_connect(self,event):
         print('websocket connected...')
         self.send({
@@ -12,15 +14,17 @@ class MySyncConsumer(SyncConsumer):
     
     def websocket_receive(self,event):
         print('websocket received...')
+        # type :websocket.receive
+        # bytes: The message content if it was binary mode 
+        # text: The message content if it was text mode
         for i in range(10):
             self.send({
             'type':'websocket.send',
-            'text':str(i)
+            'text':json.dumps({'cnt':str(i)})
             })
             sleep(1)
     
     def websocket_disconnect(self,event):
-        print('websocket disconnted...')
         raise StopConsumer()
 
 class MyAsyncConsumer(AsyncConsumer):
@@ -40,5 +44,4 @@ class MyAsyncConsumer(AsyncConsumer):
             await asyncio.sleep(1)
     
     async def websocket_disconnect(self,event):
-        print('websocket disconnted...')
         raise StopConsumer()
