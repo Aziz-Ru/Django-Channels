@@ -5,8 +5,9 @@ from django.shortcuts import render
 # with each other
 # Redis channel layer---production
 # In memory chanel layer---for development
-def index(request):
-    return render(request,'app/index.html')
+def index(request,group_name):
+    # print(group_name)
+    return render(request,'app/index.html',{'group':group_name})
 
 
 

@@ -6,7 +6,9 @@
     <title>Websocket</title>
   </head>
   <body>
-    <h1>Welcome Websocket</h1>
+    <h1>Welcome Group {{group}}</h1>
+    {{ group | json_script:"group-name"}}
+    <br />
     <textarea
       name=""
       id="chat-display"
@@ -19,7 +21,14 @@
     <input type="button" id="chat-submit" value="Send" />
 
     <script>
-      let ws = new WebSocket("ws://127.0.0.1:8000/sc/");
+      const groupname = JSON.parse(
+        document.getElementById("group-name").textContent
+      );
+      // console.log(groupname);
+
+      let ws = new WebSocket(
+        "ws://" + window.location.host + "/sc/" + groupname + "/"
+      );
       ws.onopen = (event) => {
         console.log("Connected websocket Successfully...");
         // ws.send("Hi message from client");
@@ -45,6 +54,7 @@
         messageDom.value = "";
         // console.log(messageDom.value);
       };
+    
     </script>
   </body>
 </html>
