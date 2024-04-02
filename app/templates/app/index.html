@@ -9,13 +9,12 @@
     <h1>Welcome Group {{group}}</h1>
     {{ group | json_script:"group-name"}}
     <br />
-    <textarea
-      name=""
-      id="chat-display"
-      cols="100"
-      rows="20"
-      readonly
-    ></textarea>
+    <textarea name="" id="chat-display" cols="100" rows="20" readonly>
+    {% for chat in chats %}
+    {{chat.content}}
+    {% endfor %}
+  </textarea
+    >
     <br />
     <input type="text" id="chat-input" size="100" /><br />
     <input type="button" id="chat-submit" value="Send" />

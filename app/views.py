@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from .models import*
 # channel layer allows you to talk between different instance of an application
 # a channel layer is the transport mechanism that allows multiple consumer instance to communicate
 # with each other
@@ -7,7 +7,14 @@ from django.shortcuts import render
 # In memory chanel layer---for development
 def index(request,group_name):
     # print(group_name)
-    return render(request,'app/index.html',{'group':group_name})
+    group=Group.objects.filter(name=group_name).first()
+    chats=[]
+    if group:
+        chats=Chats.objects.filter(group=group)
+    else :
+        group=Group(name=group_name)
+        group.save() 
+    return render(request,'app/index.html',{'group':group_name,'chats':chats})
 
 
 

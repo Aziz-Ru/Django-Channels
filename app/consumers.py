@@ -4,6 +4,9 @@ from asgiref.sync import async_to_sync
 from time import sleep
 import asyncio
 import json
+from channels.db import database_sync_to_async
+
+from .models import Chats,Group
 
 class MySyncConsumer(SyncConsumer):
     # websocket.connect message is handled by websocket_connect 
@@ -25,7 +28,13 @@ class MySyncConsumer(SyncConsumer):
         # bytes: The message content if it was binary mode 
         # text: The message content if it was text mode
         # print('event...',event)
+        # print(groupName)
         groupName=self.scope['url_route']['kwargs']['groupname']
+        data=json.loads(event['text'])
+        # print(data['msg'])
+        group=Group.objects.get(name=groupName)
+        chat=Chats(group=group,content=data['msg'])
+        chat.save()        
         async_to_sync(self.channel_layer.group_send)(groupName,{
             'type':'chat.message',
             'message':event['text']
@@ -57,7 +66,11 @@ class MyAsyncConsumer(AsyncConsumer):
         print('websocket received...')
         # print('event..',event)
         groupName=self.scope['url_route']['kwargs']['groupname']
-        # print(groupName)
+        data=json.loads(event['text'])
+        # print(data['msg'])
+        group=await database_sync_to_async(Group.objects.get)(name=groupName)
+        chat=Chats(group=group,content=data['msg'])
+        await database_sync_to_async(chat.save)()   
         await self.channel_layer.group_send(groupName,{
             'type':'chat.message',
             'message':event['text']
