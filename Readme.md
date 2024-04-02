@@ -2,7 +2,7 @@
 
 In SyncConsumer, there is not need any function because it's django ORM is a synchronous proccess.
 
-## AsyncConsumer
+
 
 In AsyncConsumer, Write your ORM queries in a seperate function or method and then it with database_synch_to async.Example
 
