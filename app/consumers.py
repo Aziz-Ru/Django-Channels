@@ -47,18 +47,30 @@ class MySyncConsumer(SyncConsumer):
 class MyAsyncConsumer(AsyncConsumer):
     async def websocket_connect(self,event):
         print('websocket connected...')
+        groupName=self.scope['url_route']['kwargs']['groupname']
+        await self.channel_layer.group_add(groupName,self.channel_name)
         await self.send({
             'type':'websocket.accept',
         })
     
     async def websocket_receive(self,event):
         print('websocket received...')
-        for i in range(10):
-            await self.send({
+        # print('event..',event)
+        groupName=self.scope['url_route']['kwargs']['groupname']
+        # print(groupName)
+        await self.channel_layer.group_send(groupName,{
+            'type':'chat.message',
+            'message':event['text']
+        })
+
+    async def chat_message(self,event):
+        # print('chat..event',event)
+        await self.send({
             'type':'websocket.send',
-            'text':str(i)
-            })
-            await asyncio.sleep(1)
+            'text':event['message']
+        })
     
     async def websocket_disconnect(self,event):
+        groupName=self.scope['url_route']['kwargs']['groupname']
+        await self.channel_layer.group_discard(groupName,self.channel_name)
         raise StopConsumer()

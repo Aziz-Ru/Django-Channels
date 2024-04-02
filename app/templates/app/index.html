@@ -27,7 +27,7 @@
       // console.log(groupname);
 
       let ws = new WebSocket(
-        "ws://" + window.location.host + "/sc/" + groupname + "/"
+        "ws://" + window.location.host + "/ac/" + groupname + "/"
       );
       ws.onopen = (event) => {
         console.log("Connected websocket Successfully...");
@@ -54,7 +54,6 @@
         messageDom.value = "";
         // console.log(messageDom.value);
       };
-    
     </script>
   </body>
 </html>
