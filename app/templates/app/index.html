@@ -6,18 +6,53 @@
     <title>Websocket</title>
   </head>
   <body>
-    <h1>Welcome Websocket</h1>
-    <h3 id="myh"></h3>
+    <h1>Welcome Group {{group}}</h1>
+    {{ group | json_script:"group-name"}}
+    <br />
+    <textarea name="" id="chat-display" cols="100" rows="20" readonly>
+    {% for chat in chats %}
+    {{chat.content}}
+    {% endfor %}
+  </textarea
+    >
+    <br />
+    <input type="text" id="chat-input" size="100" /><br />
+    <input type="button" id="chat-submit" value="Send" />
+
     <script>
-      let ws = new WebSocket("ws://127.0.0.1:8000/sc/");
+      const groupname = JSON.parse(
+        document.getElementById("group-name").textContent
+      );
+      // console.log(groupname);
+
+      let ws = new WebSocket(
+        "ws://" + window.location.host + "/ac/" + groupname + "/"
+      );
       ws.onopen = (event) => {
-        ws.send("Hi message from client");
+        console.log("Connected websocket Successfully...");
+        // ws.send("Hi message from client");
       };
       ws.onmessage = (event) => {
         // console.log(event.data);
-        document.getElementById("myh").innerText = JSON.parse(event.data).cnt;
+        data = JSON.parse(event.data);
+        document.getElementById("chat-display").value += data["msg"] + "\n";
       };
-      ws.onclose = (event) => {};
+      ws.onclose = (event) => {
+        console.log("Disconnected Websocket Connection...");
+      };
+      document.getElementById("chat-submit").onclick = (event) => {
+        // console.log("cliked");
+        const messageDom = document.getElementById("chat-input");
+
+        // console.log(messageDom.value);
+        ws.send(
+          JSON.stringify({
+            msg: messageDom.value,
+          })
+        );
+        messageDom.value = "";
+        // console.log(messageDom.value);
+      };
     </script>
   </body>
 </html>
