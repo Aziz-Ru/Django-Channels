@@ -25,8 +25,10 @@
       );
       // console.log(groupname);
       // console.log(window.location.host);
+      // const wsURL =
+      //   "ws://" + window.location.host + "/generic/ac/" + groupname + "/";
       const wsURL =
-        "ws://" + window.location.host + "/generic/ac/" + groupname + "/";
+        "ws://" + window.location.host + "/json/ac/" + groupname + "/";
       // console.log(wsURL);
       let ws = new WebSocket(wsURL);
 
@@ -37,7 +39,8 @@
       ws.onmessage = (event) => {
         // console.log(event.data);
         data = JSON.parse(event.data);
-        // console.log(data);
+        console.log(data);
+        // console.log(typeof data);
         document.getElementById("chat-display").value += data["msg"] + "\n";
       };
       ws.onclose = (event) => {
