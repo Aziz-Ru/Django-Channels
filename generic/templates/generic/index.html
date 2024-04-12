@@ -26,7 +26,7 @@
       // console.log(groupname);
       // console.log(window.location.host);
       const wsURL =
-        "ws://" + window.location.host + "/generic/sc/" + groupname + "/";
+        "ws://" + window.location.host + "/generic/ac/" + groupname + "/";
       // console.log(wsURL);
       let ws = new WebSocket(wsURL);
 
@@ -35,7 +35,7 @@
         // ws.send("Hi message from client");
       };
       ws.onmessage = (event) => {
-        console.log(event.data);
+        // console.log(event.data);
         data = JSON.parse(event.data);
         // console.log(data);
         document.getElementById("chat-display").value += data["msg"] + "\n";
@@ -47,7 +47,7 @@
         // console.log("cliked");
         const messageDom = document.getElementById("chat-input");
 
-        console.log(messageDom.value);
+        // console.log(messageDom.value);
         ws.send(
           JSON.stringify({
             msg: messageDom.value,
